@@ -1,0 +1,117 @@
+1. After all the normal setups, 
+	-Context API is introduced, thus Context.js is created
+	-AppContext, and useContext is used to wrap App.js in index.js file
+	use it in any desired components
+
+	-because of Context.js
+	we can write the entire logic in Context.js and then we can export any info to any component
+
+2. Use of custom hooks (a little bit better way then Context API)
+	-it is set up in Context.js
+
+
+3. Data Fetching
+	-install Axios
+	-import in Context.js
+	-refactor fetchData
+		-change name
+		-switch to axios
+		-add url parameter
+		-switch to allMealsUrl (variable name)
+		log response
+
+4. State Variable (meals) and render
+
+	-import useState hook
+	-setup state variable (meals)
+	-set it equal to the meals from api (setMeals)
+	-pass it down to entire app (value prop)
+	-destructure meals in the Meals component
+	-iterate over meals
+		-log each meal
+		-render something (anything) on the screen
+
+5. Loading
+	-loading state variable is used incase the loading/fetching time from the API increases.
+	-loading is first declared in context.js,
+		then it is imported using globalContext and is used in Meals.js before the main return (main section of the items display) 
+
+6. No items 
+	- in fetchMeals check if data.meals is truthy
+		-return true
+		-basically has some value 
+	-only if data.meals has items set it as meals state value 
+	-otherwise set meals variable as empty array
+	-in Meals.js check if meals length is less than 1
+		-if that's the case return <h4>No items</h4>
+		-place it between loading and current return (cards)
+
+7. Search Component - Structure
+	-import useState and useGlobalContext
+	-setup return
+		-header .search-container
+			-from
+				-input .form-input type="text"
+				-button .btn type="submit"
+				-button .btn.btn-hipster type="button"
+	-in App.js display Search Component
+
+8. Search Component - HandleChange and Handle Submit
+	-create "text" state variable 
+	-create two functions handleChange and handleSubmit
+	-in the handleChange, grab e.target.value and set as text value 
+	-add onChange to input and set it equal to handleChange
+	-in the handleSubmit set e.preventDefault()
+	-add onSubmit to form element and set it equal to handleSubmit 
+
+9. Search Term
+	-in Context.js create new state variable "searchTerm" with default value ""
+	-combine allMealsUrl with searchTerm and pass in the fetchMeals
+	-add searchTerm to useEffect's dependency array
+	-add searchTerm to value prop (pass it down)
+	-grab setSearchTerm in Search.js
+	-in the handleSubmit check setup a condition
+		-if the "text" has a value set it equal to "searchTerm"
+
+10. Modal Setup 
+	-in Context.js declare useState by the name of initially false
+		[showModal, setShowModal] = React.useState(false)
+	-pass showModal on AppContext
+	-in App.js call showModal using useGlobalContext() and render it in the <main> element
+		{showModal && <Modal />} if and only if when the image is clicked then the state value becomes true
+	
+11. Display Meal in the Modal
+	- in Context.js declare state and set initial value to null
+		[selevtedMeal, setSelectedMeal] = React.useState(null)
+	-setup a function selecMeal and write the logic in COntext.js 
+	-add selecMeal and setSelectedMeal in AppContext.Provider
+	- in Meals.js call selectMeal in useGlobalContext()
+	-then add an event listner OnCick={()=> selectMeal(idMeal)} in img tag 
+
+12. Display Selected Meal and Close Modal 
+	-in Context.js declare a function closeModal and pass setShowModal(false)
+	-add closeModal in AppContext.Provider 
+	-in Modal.js grab selectedMeal and closeModal using useGlobalContext()
+	- destructure the items and write the code 
+
+13. Favorite Setup
+	- in Context.js declare a state [favorite, setFavorite] 
+	- also declare functions addToFavorite(idMeal), removeFromFavorites(idMeal) 
+	- in Meals.js destructure using useGlobalContext and pass an onClick event in like button tag using a callback function.
+
+14. Rendering the Favorites 
+	- in App.js grab the favorites using useGlobalContext
+	- in Favorites.js grab favorites, strMealThumb, removeFromFavorites using useGlobalContext
+	- rest is coded below respectively
+
+15. SelectMeal Refactor 
+	- pass favoriteMeal as an argument in selectMeal function 
+	- pass the if-else condition 
+	- in Favorites.js descructure it in img tag and set an onClick event and using a callback function pass
+		selectMeal(idMeal, true)
+
+16. Add Favorites in the local storage
+	- in Context.js add localStorage.getItem in addToFavorite and removeFromFavorites
+	- in Context.js setup a function getFavoritesFromLocalStorage()
+	- then invoke the function in favorites useState augument
+		[favorites, setFavorites] = React.useState(getFavoritesFromLocalStorage());
